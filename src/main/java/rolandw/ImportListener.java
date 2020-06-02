@@ -133,7 +133,7 @@ public class ImportListener extends Java9BaseListener {
 
   private boolean isIgnoredType(String typeName, @Nullable TypeDef typeDef) {
     if (typeDef != null) {
-      if (typeDef.path().size() > 0 && "java".equals(typeDef.path().get(0))) {
+      if (typeDef.path().size() > 0 && ("java".equals(typeDef.path().get(0)) || "javax".equals(typeDef.path().get(0)))) {
         return true;
       }
     }

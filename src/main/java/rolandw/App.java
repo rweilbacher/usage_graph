@@ -2,11 +2,10 @@ package rolandw;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.Rasterizer;
 import guru.nidi.graphviz.model.Factory;
-import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
-import guru.nidi.graphviz.model.Node;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class App {
 
   private void start() throws IOException {
     Path currentRelativePath = Paths.get("");
-    traverseFiles(currentRelativePath.resolve("test"));
+    traverseFiles(currentRelativePath.resolve("xdman"));
 
     System.out.println("--------------------------------------------");
     Map<String, MutableNode> nodeMap = new HashMap<>();
@@ -59,7 +58,9 @@ public class App {
         currNode.addLink(linkedNode);
       }
     }
-    Graphviz.fromGraph(graph).render(Format.PNG).toFile(new File("out.png"));
+    Graphviz.fromGraph(graph).scale(2.0).render(Format.PNG).toFile(new File("out.png"));
+    Graphviz.fromGraph(graph).rasterize(Rasterizer.BATIK).toFile(new File("out_rasterized.png"));
+    Graphviz.fromGraph(graph).render(Format.DOT).toFile(new File("out.dot"));
   }
 
   private MutableNode addIfMissing(Map<String, MutableNode> map, MutableGraph graph,
@@ -98,7 +99,7 @@ public class App {
 
       String typeName = file.toPath().getFileName().toString().split("\\.")[0];
       String fullyQualifiedTypeName = listener.packageName() + "." + typeName;
-      System.out.println(fullyQualifiedTypeName);
+//      System.out.println(fullyQualifiedTypeName);
 
       JavaFile javaFile = new JavaFile(
           TypeDef.of(fullyQualifiedTypeName),
@@ -107,7 +108,7 @@ public class App {
 
       javaFileMap.put(fullyQualifiedTypeName, javaFile);
       packageFiles.put(typeName, javaFile);
-      printIterable(listener.usedTypes(), "usedTypes");
+//      printIterable(listener.usedTypes(), "usedTypes");
     }
     // Resolve types in this package
     for (Map.Entry<String, JavaFile> entry : packageFiles.entrySet()) {
